@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocSigner - Signatures de Documents</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>DocSigner Web</h1>
+        <nav>
+            <button class="nav-btn active" onclick="switchTab('direct')">Signature en direct</button>
+            <button class="nav-btn" onclick="switchTab('remote')">Demande à distance</button>
+            <button class="nav-btn" onclick="switchTab('contacts')">Mes Contacts</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- ONGLET 1 : SIGNATURE EN DIRECT -->
+        <section id="tab-direct" class="tab-content active">
+            <h2>Signer un document en direct</h2>
+            
+            <div class="card">
+                <h3>1. Importer le document</h3>
+                <label for="pdf-input">Fichier PDF local :</label>
+                <input type="file" id="pdf-input" accept="application/pdf">
+                
+                <p>OU</p>
+                
+                <label for="gdoc-url">Lien Google Doc (public ou partagé) :</label>
+                <input type="url" id="gdoc-url" placeholder="https://docs.google.com/document/d/.../edit">
+                <button onclick="loadGDoc()">Charger le Google Doc</button>
+            </div>
+
+            <div class="card">
+                <h3>2. Votre signature</h3>
+                <canvas id="signature-pad" width="500" height="200"></canvas>
+                <div>
+                    <button onclick="clearCanvas()">Effacer</button>
+                    <button onclick="saveSignature()">Valider la signature</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ONGLET 2 : DEMANDE DE SIGNATURE À DISTANCE -->
+        <section id="tab-remote" class="tab-content">
+            <h2>Envoyer une demande de signature</h2>
+            
+            <div class="card">
+                <form id="remote-form" onsubmit="sendRemoteRequest(event)">
+                    <label for="doc-select">Document à signer :</label>
+                    <input type="file" id="remote-doc" accept="application/pdf" required>
+
+                    <label for="contact-select">Sélectionner un destinataire :</label>
+                    <select id="contact-select" required>
+                        <option value="">-- Choisir un contact --</option>
+                    </select>
+
+                    <label for="email-message">Message personnalisé :</label>
+                    <textarea id="email-message" rows="4" placeholder="Bonjour, merci de signer ce document..."></textarea>
+
+                    <button type="submit">Générer le lien et envoyer</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ONGLET 3 : GESTION DES CONTACTS -->
+        <section id="tab-contacts" class="tab-content">
+            <h2>Carnet de contacts</h2>
+
+            <div class="card">
+                <h3>Ajouter un contact</h3>
+                <form id="add-contact-form" onsubmit="addContact(event)">
+                    <input type="text" id="contact-name" placeholder="Nom complet" required>
+                    <input type="email" id="contact-email" placeholder="Adresse email" required>
+                    <button type="submit">Ajouter</button>
+                </form>
+
+                <hr>
+
+                <h3>Importer depuis un fichier CSV</h3>
+                <input type="file" id="csv-input" accept=".csv">
+                <button onclick="importCSV()">Importer CSV</button>
+            </div>
+
+            <div class="card">
+                <h3>Liste des contacts</h3>
+                <ul id="contacts-list"></ul>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
